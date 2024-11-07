@@ -1,15 +1,11 @@
 import { PrimaryButton } from '@commercetools-uikit/buttons';
 import Text from '@commercetools-uikit/text';
 import logo from './images/pixelphraser.png';
-
-interface HeaderProps {
-  onRefresh: () => void;
-  isLoading: boolean;
-}
+import { HeaderProps } from '../../interfaces/headerProps';
 
 export const Header = ({ onRefresh, isLoading }: HeaderProps) => (
   <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1.5rem' }}>
-    <img 
+    <img
       src={logo}
       alt="Project Logo"
       style={{

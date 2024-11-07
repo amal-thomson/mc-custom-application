@@ -1,4 +1,4 @@
-// src/components/Descriptions/components/DescriptionsTable.tsx
+import { useState } from 'react';
 import { SecondaryButton, PrimaryButton } from '@commercetools-uikit/buttons';
 import DataTable from '@commercetools-uikit/data-table';
 import Text from '@commercetools-uikit/text';
@@ -8,16 +8,8 @@ import { formatDate } from '../../utils/formatDate';
 import { updateProductDescription } from '../../hooks/updateProductDescription';
 import { deleteTemporaryDescription } from '../../hooks/deleteTemporaryDescriptions';
 import { useAsyncDispatch } from '@commercetools-frontend/sdk';
-
-interface DescriptionsTableProps {
-  data: TemporaryDescription[];
-  processing: string | null;
-  setProcessing: (id: string | null) => void;
-  setError: (error: string | null) => void;
-  showSuccessMessage: (message: string) => void;
-  onImageClick: (url: string) => void;
-  loadDescriptions: () => Promise<void>;
-}
+import { DescriptionsTableProps } from '../../interfaces/descriptionsTableProps';
+import { DescriptionModal } from './descriptionModal';
 
 export const DescriptionsTable = ({
   data,
@@ -29,6 +21,7 @@ export const DescriptionsTable = ({
   loadDescriptions
 }: DescriptionsTableProps) => {
   const dispatch = useAsyncDispatch();
+  const [expandedDesc, setExpandedDesc] = useState<string | null>(null);
 
   const handleAccept = async (tempDesc: TemporaryDescription) => {
     setProcessing(tempDesc.id);
@@ -43,8 +36,8 @@ export const DescriptionsTable = ({
       showSuccessMessage('Description accepted and updated successfully');
     } catch (error) {
       setError(
-        error instanceof Error 
-          ? `Error accepting description: ${error.message}` 
+        error instanceof Error
+          ? `Error accepting description: ${error.message}`
           : 'An unexpected error occurred while accepting the description'
       );
     } finally {
@@ -60,8 +53,8 @@ export const DescriptionsTable = ({
       showSuccessMessage('Description rejected and removed successfully');
     } catch (error) {
       setError(
-        error instanceof Error 
-          ? `Error rejecting description: ${error.message}` 
+        error instanceof Error
+          ? `Error rejecting description: ${error.message}`
           : 'An unexpected error occurred while rejecting the description'
       );
     } finally {
@@ -81,13 +74,13 @@ export const DescriptionsTable = ({
     switch (column.key) {
       case 'imageUrl':
         return (
-          <img 
-            src={item.imageUrl} 
-            alt="Product" 
-            style={{ 
-              width: '80px', 
-              height: '80px', 
-              objectFit: 'cover', 
+          <img
+            src={item.imageUrl}
+            alt="Product"
+            style={{
+              width: '50px',
+              height: '50px',
+              objectFit: 'contain',
               borderRadius: '4px',
               cursor: 'pointer'
             }}
@@ -95,15 +88,32 @@ export const DescriptionsTable = ({
           />
         );
       case 'productName':
-        return <Text.Body>{item.productName}</Text.Body>;
+        return (
+          <div style={{ padding: '0.5rem' }}>
+            <Text.Body>{item.productName}</Text.Body>
+          </div>
+        );
       case 'description':
         return (
-          <div style={{ maxHeight: '8rem', overflowY: 'auto', padding: '0.5rem', backgroundColor: '#f8f9fa', borderRadius: '4px' }}>
+          <div
+            onClick={() => setExpandedDesc(item.description)}
+            style={{
+              maxHeight: '4rem',
+              overflowY: 'auto',
+              padding: '0.5rem',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
             <Text.Body>{item.description}</Text.Body>
           </div>
         );
       case 'generatedAt':
-        return <Text.Body tone="secondary">{formatDate(item.generatedAt)}</Text.Body>;
+        return (
+          <div style={{ padding: '0.5rem' }}>
+            <Text.Body tone="secondary">{formatDate(item.generatedAt)}</Text.Body>
+          </div>
+        );
       case 'actions':
         return (
           <Spacings.Inline scale="s">
@@ -125,17 +135,25 @@ export const DescriptionsTable = ({
   };
 
   return (
-    <DataTable
-      columns={columns}
-      rows={data.map(desc => ({
-        imageUrl: desc.value.imageUrl,
-        productName: desc.value.productName,
-        description: desc.value.temporaryDescription,
-        generatedAt: desc.value.generatedAt,
-        actions: 'actions',
-        id: desc.id
-      }))}
-      itemRenderer={itemRenderer}
-    />
+    <>
+      <DataTable
+        columns={columns}
+        rows={data.map(desc => ({
+          imageUrl: desc.value.imageUrl,
+          productName: desc.value.productName,
+          description: desc.value.temporaryDescription,
+          generatedAt: desc.value.generatedAt,
+          actions: 'actions',
+          id: desc.id
+        }))}
+        itemRenderer={itemRenderer}
+      />
+      {expandedDesc && (
+        <DescriptionModal
+          description={expandedDesc}
+          onClose={() => setExpandedDesc(null)}
+        />
+      )}
+    </>
   );
 };

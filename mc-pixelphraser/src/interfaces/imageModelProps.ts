@@ -1,4 +1,4 @@
 export interface ImageModalProps {
-    imageUrl: string;
-    onClose: () => void;
-  }
+  imageUrl: string;
+  onClose: () => void;
+}

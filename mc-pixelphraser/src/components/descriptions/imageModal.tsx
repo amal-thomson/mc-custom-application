@@ -2,7 +2,7 @@ import React from 'react';
 import { ImageModalProps } from '../../interfaces/imageModelProps';
 
 export const ImageModal: React.FC<ImageModalProps> = ({ imageUrl, onClose }) => (
-  <div 
+  <div
     style={{
       position: 'fixed',
       top: 0,
@@ -18,9 +18,9 @@ export const ImageModal: React.FC<ImageModalProps> = ({ imageUrl, onClose }) => 
     }}
     onClick={onClose}
   >
-    <img 
-      src={imageUrl} 
-      alt="Enlarged product" 
+    <img
+      src={imageUrl}
+      alt="Enlarged product"
       style={{
         maxWidth: '90%',
         maxHeight: '90vh',

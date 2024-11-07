@@ -11,7 +11,7 @@ export const NoDescriptionsFound: React.FC = () => (
     padding: '3rem',
     textAlign: 'center'
   }}>
-    <img 
+    <img
       src={noDescription}
       alt="No descriptions found"
       style={{

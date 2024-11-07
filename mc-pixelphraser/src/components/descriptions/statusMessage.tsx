@@ -1,9 +1,5 @@
 import Text from '@commercetools-uikit/text';
-
-interface StatusMessageProps {
-  error: string | null;
-  successMessage: string | null;
-}
+import { StatusMessageProps } from '../../interfaces/statusMessageProps';
 
 export const StatusMessage = ({ error, successMessage }: StatusMessageProps) => (
   <>
